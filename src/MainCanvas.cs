@@ -33,6 +33,7 @@ public class MainCanvas : Form
         _functionsHeader.CreateButton("Linha (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricLine), Controls);
         _functionsHeader.CreateButton("Círculo (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardCircle), Controls);
         _functionsHeader.CreateButton("Círculo (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricCircle), Controls);
+        _functionsHeader.CreateButton("Círculo (Por rotações)", (_, _) => _SetActiveFunction(CanvasFunctions.RotationsCircle), Controls);
     }
 
     private void _SetActiveFunction(CanvasFunctions function)

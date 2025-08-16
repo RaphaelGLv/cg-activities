@@ -23,6 +23,9 @@ public static class CanvasDrawingFunctions
             case CanvasFunctions.ParametricCircle:
                 _DrawParametricCircleFunction(points, drawPixel);
                 break;
+            case CanvasFunctions.RotationsCircle:
+                _DrawRotationsCircleFunction(points, drawPixel);
+                break;
             default: break;
         }
     }
@@ -147,6 +150,26 @@ public static class CanvasDrawingFunctions
             var y = Convert.ToInt32(radius * Math.Sin(angle));
             
             drawPixel(startX + x, startY + y);
+        }
+    }
+
+    private static void _DrawRotationsCircleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        
+        var radius = _CalculatePointsDistance(points);
+
+        var x = radius;
+        var y = 0.0;
+
+        for (var angle = 0; angle < 360; angle++)
+        {
+            var newX = x * Math.Cos(1) - y * Math.Sin(1);
+            y = x * Math.Sin(1) + y * Math.Cos(1);
+            x = newX;
+            
+            drawPixel(startX + Convert.ToInt32(x), startY + Convert.ToInt32(y));
         }
     }
 }

@@ -31,6 +31,7 @@ public class MainCanvas : Form
         functionsHeader.CreateButton("Mouse", (_, _) => _SetActiveFunction(CanvasFunctions.None), Controls);
         functionsHeader.CreateButton("Linha (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardLine), Controls);
         functionsHeader.CreateButton("Linha (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricLine), Controls);
+        functionsHeader.CreateButton("Círculo (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardCircle), Controls);
     }
 
     private void _SetActiveFunction(CanvasFunctions function)

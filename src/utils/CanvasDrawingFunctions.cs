@@ -17,9 +17,24 @@ public static class CanvasDrawingFunctions
             case CanvasFunctions.ParametricLine:
                 _DrawParametricLineFunction(points, drawPixel);
                 break;
-            case CanvasFunctions.Circle: break;
+            case CanvasFunctions.StandardCircle:
+                _DrawStandardCircleFunction(points, drawPixel);
+                break;
             default: break;
         }
+    }
+
+    private static double _CalculatePointsDistance(Tuple<Point, Point> points)
+    {
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        var endX = points.Item2.X;
+        var endY = points.Item2.Y;
+        
+        var deltaX = startX - endX;
+        var deltaY = startY - endY;
+        
+        return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
     private static void _DrawStandardLineFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
@@ -96,6 +111,23 @@ public static class CanvasDrawingFunctions
             var y = Convert.ToInt32(startY + (endY - startY) * completionPercentage);
             
             drawPixel(x, y);
+        }
+    }
+
+    private static void _DrawStandardCircleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        var endX = points.Item2.X;
+        var endY = points.Item2.Y;
+        
+        var radius = Convert.ToInt32(_CalculatePointsDistance(points));
+
+        for (var x = -radius; x <= radius; x++)
+        {
+            var y = Convert.ToInt32(Math.Sqrt(radius * radius - x * x));
+            drawPixel(startX + x, startY + y);
+            drawPixel(startX + x, startY - y);
         }
     }
 }

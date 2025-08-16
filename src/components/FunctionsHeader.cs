@@ -3,6 +3,7 @@
 public class FunctionsHeader
 {
     private const int ButtonDefaultGap = 10;
+    private const int ButtonDefaultHorizontalPadding = 4;
     private const int CharWidth = 6;
     private readonly List<Button> _buttons = [];
     private int _containerWidth = ButtonDefaultGap;
@@ -12,7 +13,7 @@ public class FunctionsHeader
         var button = new Button();
         button.Text = text;
         button.Click += onClick;
-        button.Width = text.Length * CharWidth;
+        button.Width = (ButtonDefaultHorizontalPadding + text.Length) * CharWidth;
         
         button.Location = new Point(_containerWidth, 10);
         

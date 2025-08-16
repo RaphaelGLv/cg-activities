@@ -20,6 +20,9 @@ public static class CanvasDrawingFunctions
             case CanvasFunctions.StandardCircle:
                 _DrawStandardCircleFunction(points, drawPixel);
                 break;
+            case CanvasFunctions.ParametricCircle:
+                _DrawParametricCircleFunction(points, drawPixel);
+                break;
             default: break;
         }
     }
@@ -118,8 +121,6 @@ public static class CanvasDrawingFunctions
     {
         var startX = points.Item1.X;
         var startY = points.Item1.Y;
-        var endX = points.Item2.X;
-        var endY = points.Item2.Y;
         
         var radius = Convert.ToInt32(_CalculatePointsDistance(points));
 
@@ -128,6 +129,24 @@ public static class CanvasDrawingFunctions
             var y = Convert.ToInt32(Math.Sqrt(radius * radius - x * x));
             drawPixel(startX + x, startY + y);
             drawPixel(startX + x, startY - y);
+        }
+    }
+
+    private static void _DrawParametricCircleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        
+        var radius = Convert.ToInt32(_CalculatePointsDistance(points));
+
+        const double fullCircleInRad = 6.28;
+
+        for (var angle = 0.0; angle < fullCircleInRad; angle += 0.01)
+        {
+            var x = Convert.ToInt32(radius * Math.Cos(angle));
+            var y = Convert.ToInt32(radius * Math.Sin(angle));
+            
+            drawPixel(startX + x, startY + y);
         }
     }
 }

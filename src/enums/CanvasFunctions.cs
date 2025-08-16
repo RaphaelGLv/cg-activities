@@ -6,4 +6,5 @@ public enum CanvasFunctions
     StandardLine,
     ParametricLine,
     StandardCircle,
+    ParametricCircle,
 }

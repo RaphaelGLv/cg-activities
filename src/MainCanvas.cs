@@ -80,18 +80,7 @@ public class MainCanvas : Form
         
         _SetIsDrawing(false);
 
-        switch (_activeFunction)
-        {
-            case CanvasFunctions.StandardLine: 
-                CanvasButtonsFunctions.DrawLine(
-                    DrawLineEquationsEnum.Standard,
-                    new Tuple<Point, Point>(mouseStartPoint, mouseCurrentPoint),
-                    _DrawPixel
-                    ); 
-                
-                break;
-            default: break;
-        }
+        CanvasDrawingFunctions.Draw(_activeFunction, new Tuple<Point, Point>(mouseStartPoint, mouseCurrentPoint), _DrawPixel);
     }
 
     private void _SetIsDrawing(bool state)

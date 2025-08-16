@@ -2,19 +2,19 @@
 
 namespace GraphicsComputingApp.utils;
 
-public static class CanvasButtonsFunctions
+public static class CanvasDrawingFunctions
 {
-    public static void DrawLine(DrawLineEquationsEnum lineEquation, Tuple<Point, Point> points, Action<int, int> drawPixel)
+    public static void Draw(CanvasFunctions selectedFunction, Tuple<Point, Point> points, Action<int, int> drawPixel)
     {
         if (points.Item1 == points.Item2)
             return;
         
-        switch (lineEquation)
+        switch (selectedFunction)
         {
-            case DrawLineEquationsEnum.Standard:
+            case CanvasFunctions.StandardLine:
                 _DrawStandardLineFunction(points, drawPixel);
                 break;
-            case DrawLineEquationsEnum.Parametric: break;
+            case CanvasFunctions.Circle: break;
             default: break;
         }
     }

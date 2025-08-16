@@ -3,6 +3,6 @@
 public enum CanvasFunctions
 {
     None,
-    Line,
-    Circle
+    StandardLine,
+    Circle,
 }

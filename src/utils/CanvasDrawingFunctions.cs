@@ -14,6 +14,9 @@ public static class CanvasDrawingFunctions
             case CanvasFunctions.StandardLine:
                 _DrawStandardLineFunction(points, drawPixel);
                 break;
+            case CanvasFunctions.ParametricLine:
+                _DrawParametricLineFunction(points, drawPixel);
+                break;
             case CanvasFunctions.Circle: break;
             default: break;
         }
@@ -77,5 +80,22 @@ public static class CanvasDrawingFunctions
             }
         }
 
+    }
+
+    private static void _DrawParametricLineFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        var endX = points.Item2.X;
+        var endY = points.Item2.Y;
+
+        const double pixelPaintRate = 0.001;
+        for (var completionPercentage = 0.01; completionPercentage < 1; completionPercentage += pixelPaintRate)
+        {
+            var x = Convert.ToInt32(startX + (endX - startX) * completionPercentage);
+            var y = Convert.ToInt32(startY + (endY - startY) * completionPercentage);
+            
+            drawPixel(x, y);
+        }
     }
 }

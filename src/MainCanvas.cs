@@ -23,7 +23,14 @@ public class MainCanvas : Form
         
         this._InitializeCanvas();
         
+        this._CreateButtons();
+    }
+
+    private void _CreateButtons()
+    {
+        functionsHeader.CreateButton("Mouse", (_, _) => _SetActiveFunction(CanvasFunctions.None), Controls);
         functionsHeader.CreateButton("Linha (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardLine), Controls);
+        functionsHeader.CreateButton("Linha (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricLine), Controls);
     }
 
     private void _SetActiveFunction(CanvasFunctions function)

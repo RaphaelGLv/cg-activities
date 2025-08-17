@@ -3,8 +3,7 @@
     public class CanvasHeader
     {
         private const int ItemsGap = 10;
-        private const int ItemsHorizontalPadding = 4;
-        private const int CharWidth = 6;
+        private const int ItemsHorizontalPadding = 12;
 
         private readonly Control.ControlCollection controls;
         private int _containerWidth = ItemsGap;
@@ -69,8 +68,8 @@
             }
         }
 
-        private int _CalculateButtonWidth(string buttonText)
+        private static int _CalculateButtonWidth(string buttonText)
         {
-            return (buttonText.Length * CharWidth) + ItemsHorizontalPadding;
+            return TextRenderer.MeasureText(buttonText, new Button().Font).Width + ItemsHorizontalPadding;
         }
     }

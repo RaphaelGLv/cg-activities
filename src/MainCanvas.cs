@@ -41,8 +41,13 @@ public class MainCanvas : Form
         };
         
         _canvasHeader.CreateComboBox(drawingFunctionsList);
+        _canvasHeader.CreateButton("Limpar canvas", (_, _) => _ClearCanvas());
     }
-
+    private void _ClearCanvas()
+    {
+        _g.Clear(Color.White);
+        _canvas.Refresh();
+    }
     private void _SetActiveFunction(CanvasFunctions function)
     {
         Cursor = function == CanvasFunctions.None ? Cursors.Default : Cursors.Cross;

@@ -8,7 +8,7 @@ public class MainCanvas : Form
 {
     private Point _mouseStartPoint;
     private Point _mouseCurrentPoint;
-    private readonly FunctionsHeader _functionsHeader = new FunctionsHeader();
+    private CanvasHeader _canvasHeader;
     private PictureBox _canvas;
     private Bitmap _bmp;
     private Graphics _g;
@@ -23,17 +23,24 @@ public class MainCanvas : Form
         
         this._InitializeCanvas();
         
-        this._CreateButtons();
+        this._BuildHeader();
     }
 
-    private void _CreateButtons()
+    private void _BuildHeader()
     {
-        _functionsHeader.CreateButton("Mouse", (_, _) => _SetActiveFunction(CanvasFunctions.None), Controls);
-        _functionsHeader.CreateButton("Linha (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardLine), Controls);
-        _functionsHeader.CreateButton("Linha (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricLine), Controls);
-        _functionsHeader.CreateButton("Círculo (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardCircle), Controls);
-        _functionsHeader.CreateButton("Círculo (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricCircle), Controls);
-        _functionsHeader.CreateButton("Círculo (Por rotações)", (_, _) => _SetActiveFunction(CanvasFunctions.RotationsCircle), Controls);
+        _canvasHeader = new CanvasHeader(Controls);
+        
+        var drawingFunctionsList = new List<DrawingFunctionOption>
+        {
+            new("Mouse", (_, _) => _SetActiveFunction(CanvasFunctions.None)),
+            new("Linha (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardLine)),
+            new("Linha (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricLine)),
+            new("Círculo (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardCircle)),
+            new("Círculo (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricCircle)),
+            new("Círculo (Por rotações)", (_, _) => _SetActiveFunction(CanvasFunctions.RotationsCircle)),
+        };
+        
+        _canvasHeader.CreateComboBox(drawingFunctionsList);
     }
 
     private void _SetActiveFunction(CanvasFunctions function)

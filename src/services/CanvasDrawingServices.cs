@@ -1,8 +1,9 @@
 ﻿using GraphicsComputingApp.enums;
+using GraphicsComputingApp.utils;
 
-namespace GraphicsComputingApp.utils;
+namespace GraphicsComputingApp.services;
 
-public static class CanvasDrawingFunctions
+public static class CanvasDrawingServices
 {
     public static void Draw(CanvasFunctions selectedFunction, Tuple<Point, Point> points, Action<int, int> drawPixel)
     {
@@ -11,6 +12,7 @@ public static class CanvasDrawingFunctions
         
         switch (selectedFunction)
         {
+            case CanvasFunctions.None: break;
             case CanvasFunctions.StandardLine:
                 _DrawStandardLineFunction(points, drawPixel);
                 break;
@@ -26,21 +28,11 @@ public static class CanvasDrawingFunctions
             case CanvasFunctions.RotationsCircle:
                 _DrawRotationsCircleFunction(points, drawPixel);
                 break;
+            case CanvasFunctions.BresenhamCircle:
+                _DrawBresenhamCircleFunction(points, drawPixel);
+                break;
             default: break;
         }
-    }
-
-    private static double _CalculatePointsDistance(Tuple<Point, Point> points)
-    {
-        var startX = points.Item1.X;
-        var startY = points.Item1.Y;
-        var endX = points.Item2.X;
-        var endY = points.Item2.Y;
-        
-        var deltaX = startX - endX;
-        var deltaY = startY - endY;
-        
-        return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
     private static void _DrawStandardLineFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
@@ -125,7 +117,7 @@ public static class CanvasDrawingFunctions
         var startX = points.Item1.X;
         var startY = points.Item1.Y;
         
-        var radius = Convert.ToInt32(_CalculatePointsDistance(points));
+        var radius = Convert.ToInt32(CanvasDrawingUtils.CalculatePointsDistance(points));
 
         for (var x = -radius; x <= radius; x++)
         {
@@ -140,7 +132,7 @@ public static class CanvasDrawingFunctions
         var startX = points.Item1.X;
         var startY = points.Item1.Y;
         
-        var radius = Convert.ToInt32(_CalculatePointsDistance(points));
+        var radius = Convert.ToInt32(CanvasDrawingUtils.CalculatePointsDistance(points));
 
         const double fullCircleInRad = 6.28;
 
@@ -158,7 +150,7 @@ public static class CanvasDrawingFunctions
         var startX = points.Item1.X;
         var startY = points.Item1.Y;
         
-        var radius = _CalculatePointsDistance(points);
+        var radius = CanvasDrawingUtils.CalculatePointsDistance(points);
 
         var x = radius;
         var y = 0.0;
@@ -170,6 +162,37 @@ public static class CanvasDrawingFunctions
             x = newX;
             
             drawPixel(startX + Convert.ToInt32(x), startY + Convert.ToInt32(y));
+        }
+    }
+
+    private static void _DrawBresenhamCircleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var radius = CanvasDrawingUtils.CalculatePointsDistance(points);
+        var x = 0;
+        var y = Convert.ToInt32(radius);
+        var h = 1 - radius;
+        var dEast = 3;
+        var dSouthEast = -2 * radius + 5;
+        
+        CanvasDrawingUtils.DrawSymmetric_8(new Point(x, y), drawPixel);
+        while (x < y)
+        {
+            if (h < 0)
+            {
+                h += dEast;
+                dEast += 2;
+                dSouthEast -= 2;
+            }
+            else
+            {
+                h += dSouthEast;
+                dEast += 2;
+                dSouthEast -= 4;
+                y--;
+            }
+
+            x++;
+            CanvasDrawingUtils.DrawSymmetric_8(new Point(x, y), drawPixel);
         }
     }
 }

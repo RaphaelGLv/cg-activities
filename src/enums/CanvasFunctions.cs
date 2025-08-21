@@ -8,4 +8,5 @@ public enum CanvasFunctions
     StandardCircle,
     ParametricCircle,
     RotationsCircle,
+    BresenhamCircle,
 }

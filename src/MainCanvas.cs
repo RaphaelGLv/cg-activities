@@ -1,5 +1,6 @@
 ﻿using GraphicsComputingApp.components;
 using GraphicsComputingApp.enums;
+using GraphicsComputingApp.services;
 using GraphicsComputingApp.utils;
 
 namespace GraphicsComputingApp;
@@ -38,6 +39,7 @@ public class MainCanvas : Form
             new("Círculo (Eq. Geral)", (_, _) => _SetActiveFunction(CanvasFunctions.StandardCircle)),
             new("Círculo (Eq. Paramétrica)", (_, _) => _SetActiveFunction(CanvasFunctions.ParametricCircle)),
             new("Círculo (Por rotações)", (_, _) => _SetActiveFunction(CanvasFunctions.RotationsCircle)),
+            new("Círculo (Por Bresenham)", (_, _) => _SetActiveFunction(CanvasFunctions.BresenhamCircle)),
         };
         
         _canvasHeader.CreateComboBox(drawingFunctionsList);
@@ -102,7 +104,7 @@ public class MainCanvas : Form
         
         _SetIsDrawing(false);
 
-        CanvasDrawingFunctions.Draw(_activeFunction, new Tuple<Point, Point>(_mouseStartPoint, _mouseCurrentPoint), _DrawPixel);
+        CanvasDrawingServices.Draw(_activeFunction, new Tuple<Point, Point>(_mouseStartPoint, _mouseCurrentPoint), _DrawPixel);
     }
 
     private void _SetIsDrawing(bool state)

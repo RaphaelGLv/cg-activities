@@ -167,6 +167,7 @@ public static class CanvasDrawingServices
 
     private static void _DrawBresenhamCircleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
     {
+        var startPoint = points.Item1;
         var radius = CanvasDrawingUtils.CalculatePointsDistance(points);
         var x = 0;
         var y = Convert.ToInt32(radius);
@@ -174,25 +175,27 @@ public static class CanvasDrawingServices
         var dEast = 3;
         var dSouthEast = -2 * radius + 5;
         
-        CanvasDrawingUtils.DrawSymmetric_8(new Point(x, y), drawPixel);
+        CanvasDrawingUtils.DrawSymmetric_8(new Tuple<Point, Point>(startPoint, new Point(x, y)), drawPixel);
         while (x < y)
         {
             if (h < 0)
             {
                 h += dEast;
                 dEast += 2;
-                dSouthEast -= 2;
+                dSouthEast += 2;
             }
             else
             {
                 h += dSouthEast;
                 dEast += 2;
-                dSouthEast -= 4;
+                dSouthEast += 4;
                 y--;
             }
 
             x++;
-            CanvasDrawingUtils.DrawSymmetric_8(new Point(x, y), drawPixel);
+            
+            var point = new Point(x, y);
+            CanvasDrawingUtils.DrawSymmetric_8(new Tuple<Point, Point>(startPoint, point), drawPixel);
         }
     }
 }

@@ -15,18 +15,22 @@ public static class CanvasDrawingUtils
         return Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
     }
 
-    public static void DrawSymmetric_8(Point point, Action<int, int> drawPixel)
+    public static void DrawSymmetric_8(Tuple<Point, Point> points, Action<int, int> drawPixel)
     {
-        var x =  point.X;
-        var y =  point.Y;
+        var centerX = points.Item1.X;
+        var centerY = points.Item1.Y;
+        var x =  points.Item2.X;
+        var y =  points.Item2.Y;
         
-        drawPixel(x, y);
-        drawPixel(y, x);
-        drawPixel(x, -y);
-        drawPixel(-y, x);
-        drawPixel(-x, -y);
-        drawPixel(-y, -x);
-        drawPixel(-x, y);
-        drawPixel(y, -x);
+        drawPixel(centerX + x, centerY + y);
+        drawPixel(centerX - x, centerY + y);
+        drawPixel(centerX + x, centerY - y);
+        drawPixel(centerX - x, centerY - y);
+    
+        // Octantes 5, 6, 7, 8 (baseado em y, x)
+        drawPixel(centerX + y, centerY + x);
+        drawPixel(centerX - y, centerY + x);
+        drawPixel(centerX + y, centerY - x);
+        drawPixel(centerX - y, centerY - x);
     }
 }

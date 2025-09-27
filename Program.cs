@@ -1,3 +1,3 @@
 ﻿using GraphicsComputingApp;
 
-Application.Run(new MainCanvas());
+Application.Run(MainCanvas.GetInstance());

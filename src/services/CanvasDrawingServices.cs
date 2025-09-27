@@ -1,4 +1,7 @@
 ﻿using GraphicsComputingApp.enums;
+using GraphicsComputingApp.src.extensions;
+using GraphicsComputingApp.src.shapes;
+using GraphicsComputingApp.src.utils;
 using GraphicsComputingApp.utils;
 
 namespace GraphicsComputingApp.services;
@@ -30,6 +33,12 @@ public static class CanvasDrawingServices
                 break;
             case CanvasFunctions.BresenhamCircle:
                 _DrawBresenhamCircleFunction(points, drawPixel);
+                break;
+            case CanvasFunctions.CohenRectangle:
+                _DrawCohenRectangleFunction(points, drawPixel);
+                break;
+            case CanvasFunctions.CohenLine:
+                _DrawCohenLineFunction(points, drawPixel);
                 break;
             default: break;
         }
@@ -197,5 +206,121 @@ public static class CanvasDrawingServices
             var point = new Point(x, y);
             CanvasDrawingUtils.DrawSymmetric_8(new Tuple<Point, Point>(startPoint, point), drawPixel);
         }
+    }
+
+    private static void _DrawCohenRectangleFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var canvas = MainCanvas.GetInstance();
+        canvas.ClearClippingRect();
+
+        var startX = points.Item1.X;
+        var startY = points.Item1.Y;
+        var endX = points.Item2.X;
+        var endY = points.Item2.Y;
+
+        var leftRectFacePoints = new Tuple<Point, Point>(new Point(startX, startY), new Point(startX, endY));
+        var rightRectFacePoints = new Tuple<Point, Point>(new Point(endX, startY), new Point(endX, endY));
+        var topRectFacePoints = new Tuple<Point, Point>(new Point(startX, startY), new Point(endX, startY));
+        var bottomRectFacePoints = new Tuple<Point, Point>(new Point(startX, endY), new Point(endX, endY));
+
+        _DrawStandardLineFunction(leftRectFacePoints, drawPixel);
+        _DrawStandardLineFunction(rightRectFacePoints, drawPixel);
+        _DrawStandardLineFunction(topRectFacePoints, drawPixel);
+        _DrawStandardLineFunction(bottomRectFacePoints, drawPixel);
+
+        canvas.clippingRect = new AppRectangle(
+            topLeft: topRectFacePoints.Item1,
+            topRight: topRectFacePoints.Item2,
+            bottomRight: bottomRectFacePoints.Item2,
+            bottomLeft: bottomRectFacePoints.Item1
+        );
+        canvas.SelectDrawingFunctionByTitle(CanvasFunctions.CohenLine.GetDescription());
+    }
+
+    private static void _DrawCohenLineFunction(Tuple<Point, Point> points, Action<int, int> drawPixel)
+    {
+        var startPoint = points.Item1;
+        var endPoint = points.Item2;
+
+        var startPointCode = _GetCohenLineCode(startPoint);
+        var endPointCode = _GetCohenLineCode(endPoint);
+
+        if (startPointCode == -1 || endPointCode == -1) return;
+
+        while (true)
+        {
+            if ((startPointCode | endPointCode) == 0)
+            {
+                _DrawStandardLineFunction(new Tuple<Point, Point>(startPoint, endPoint), drawPixel);
+                break;
+            }
+            if ((startPointCode & endPointCode) != 0)
+            {
+                break;
+            }
+            var pointCodeOut = startPointCode != 0 ? startPointCode : endPointCode;
+            int x = 0, y = 0;
+            var clippingRect = MainCanvas.GetInstance().clippingRect;
+            if (clippingRect is null) return;
+            if (pointCodeOut.CohenCodeIsOutFromTop())
+            {
+                x = startPoint.X + (endPoint.X - startPoint.X) * (clippingRect.topLeft.Y - startPoint.Y) / (endPoint.Y - startPoint.Y);
+                y = clippingRect.topLeft.Y;
+            }
+            else if (pointCodeOut.CohenCodeIsOutFromBottom())
+            {
+                x = startPoint.X + (endPoint.X - startPoint.X) * (clippingRect.bottomLeft.Y - startPoint.Y) / (endPoint.Y - startPoint.Y);
+                y = clippingRect.bottomLeft.Y;
+            }
+            else if (pointCodeOut.CohenCodeIsOutFromRight())
+            {
+                y = startPoint.Y + (endPoint.Y - startPoint.Y) * (clippingRect.topRight.X - startPoint.X) / (endPoint.X - startPoint.X);
+                x = clippingRect.topRight.X;
+            }
+            else if (pointCodeOut.CohenCodeIsOutFromLeft())
+            {
+                y = startPoint.Y + (endPoint.Y - startPoint.Y) * (clippingRect.topLeft.X - startPoint.X) / (endPoint.X - startPoint.X);
+                x = clippingRect.topLeft.X;
+            }
+            if (pointCodeOut == startPointCode)
+            {
+                startPoint = new Point(x, y);
+                startPointCode = _GetCohenLineCode(startPoint);
+            }
+            else
+            {
+                endPoint = new Point(x, y);
+                endPointCode = _GetCohenLineCode(endPoint);
+            }
+        }
+    }
+
+    private static int _GetCohenLineCode(Point point)
+    {
+        var clippingRect = MainCanvas.GetInstance().clippingRect;
+
+        var pointCode = 0;
+
+        if (clippingRect is null) return -1;
+
+        if (point.Y < clippingRect.topLeft.Y)
+        {
+            pointCode |= 0b1000;
+        }
+        else if (point.Y > clippingRect.bottomLeft.Y)
+        {
+            pointCode |= 0b0100;
+        }
+
+        if (point.X > clippingRect.topRight.X)
+        {
+            pointCode |= 0b0010;
+        }
+        else if (point.X < clippingRect.topLeft.X)
+        {
+            pointCode |= 0b0001;
+        }
+
+        return pointCode;
     }
 }

@@ -68,7 +68,16 @@
             }
         }
 
-        private static int _CalculateButtonWidth(string buttonText)
+        public void SelectComboBoxItemByTitle(string title)
+        {
+            var index = _functionsComboBox.Items.IndexOf(title);
+            if (index != -1)
+            {
+                _functionsComboBox.SelectedIndex = index;
+            }
+    }
+
+    private static int _CalculateButtonWidth(string buttonText)
         {
             return TextRenderer.MeasureText(buttonText, new Button().Font).Width + ItemsHorizontalPadding;
         }

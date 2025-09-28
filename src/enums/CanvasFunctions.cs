@@ -21,4 +21,6 @@ public enum CanvasFunctions
     CohenRectangle,
     [Description("Linha de Cohen")]
     CohenLine,
+    [Description("Projeção 3D - 2D: Desenhar Casa")]
+    Projection3D,
 }

@@ -1,4 +1,6 @@
-﻿namespace GraphicsComputingApp.components;
+﻿using GraphicsComputingApp.src.components.entities;
+
+namespace GraphicsComputingApp.components;
 
     public class CanvasHeader
     {

@@ -3,16 +3,14 @@ using GraphicsComputingApp.src.extensions;
 using GraphicsComputingApp.src.shapes;
 using GraphicsComputingApp.src.utils;
 using GraphicsComputingApp.utils;
+using Microsoft.VisualBasic.Devices;
 
 namespace GraphicsComputingApp.services;
 
 public static class CanvasDrawingServices
 {
     public static void Draw(CanvasFunctions selectedFunction, Tuple<Point, Point> points, Action<int, int> drawPixel)
-    {
-        if (points.Item1 == points.Item2)
-            return;
-        
+    {        
         switch (selectedFunction)
         {
             case CanvasFunctions.None: break;
@@ -39,6 +37,9 @@ public static class CanvasDrawingServices
                 break;
             case CanvasFunctions.CohenLine:
                 _DrawCohenLineFunction(points, drawPixel);
+                break;
+            case CanvasFunctions.Projection3D:
+                _DrawHouseProjection(drawPixel);
                 break;
             default: break;
         }
@@ -322,5 +323,12 @@ public static class CanvasDrawingServices
         }
 
         return pointCode;
+    }
+
+    private static void _DrawHouseProjection(Action<int, int> drawPixel)
+    {
+        var house = MainCanvas.GetInstance().house;
+        foreach (var edge in house.GetParalelProjectedHouseEdges())
+            _DrawStandardLineFunction(edge, drawPixel);
     }
 }
